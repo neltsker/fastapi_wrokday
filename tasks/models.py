@@ -9,6 +9,29 @@ from datetime import datetime, timedelta
 
 
 
+
+class Organization(ormar.Model):
+    class Meta:
+        tablename = 'organizations'
+        metadata = metadata
+        database = database
+    id: Optional[int] = ormar.Integer(primary_key=True, autoincrement=True)
+    name: str = ormar.String(max_length=100)
+    creator: User = ormar.ForeignKey(User)
+
+class Department(ormar.Model):
+    class Meta:
+        tablename = 'department'
+        metadata = metadata
+        database = database
+    id: Optional[int] = ormar.Integer(primary_key=True, autoincrement=True)
+    name: str = ormar.String(max_length=100)
+    admin: List[User] = ormar.ForeignKey(User, related_name='admin')
+    organization: Organization = ormar.ForeignKey(Organization, related_name="organization")
+    workers: Optional[List[User]] =ormar.ForeignKey(User, related_name='worker')
+
+
+
 class Task(ormar.Model):
     class Meta:
         tablename = 'tasks'
@@ -17,8 +40,10 @@ class Task(ormar.Model):
     id: Optional[int] = ormar.Integer(primary_key=True, autoincrement=True)
     name: str = ormar.String(max_length=100)
     description: Optional[str] = ormar.String(max_length=100)
-    #startDate:
-    #endDate:
+    startDate: datetime = ormar.DateTime(default=datetime.now())
+    endDate: Optional[datetime] = ormar.DateTime(nullable=True)
+    creator: User = ormar.ForeignKey(User)
+    dep: Department = ormar.ForeignKey(Department)
     #state:
     
     #full_name: Optional[str] = ormar.String(max_length=100)

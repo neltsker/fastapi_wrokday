@@ -11,6 +11,8 @@ from db import database, metadata, engine
 
 
 from auth.app import user_router, oauth2_scheme
+from tasks.app import task_router
+
 # to get a string like this run:
 # openssl rand -hex 32
 #SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -63,4 +65,6 @@ async def shutdown() -> None:
 """
 
 app.include_router(user_router)
+app.include_router(task_router)
+
 
