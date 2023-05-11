@@ -8,6 +8,7 @@ from fastapi import APIRouter, Response, status
 from .models import  *
 from .schemas import *
 from db import database, metadata, engine
+from auth.app import get_current_active_user
 
 
 task_router = APIRouter(prefix="/task",
@@ -20,5 +21,5 @@ async def hi():
 
 
 @task_router.get("/organizations")
-async def organizations():
-    return "hi"
+async def organizations(current_user: Annotated[User, Depends(get_current_active_user)]):
+    return current_user
