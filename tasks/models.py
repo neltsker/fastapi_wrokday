@@ -17,7 +17,9 @@ class Organization(ormar.Model):
         database = database
     id: Optional[int] = ormar.Integer(primary_key=True, autoincrement=True)
     name: str = ormar.String(max_length=100)
+    description: str = ormar.String(max_length=1000)
     creator: User = ormar.ForeignKey(User)
+
 
 class Department(ormar.Model):
     class Meta:

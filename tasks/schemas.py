@@ -20,3 +20,7 @@ class UserRegistrationSchema(BaseModel):
     #disabled: bool#Optional[bool] = ormar.Boolean()
     #latitude: float
     #longitude: float
+
+class OrgRegistrationSchema(BaseModel):
+    name: str
+    description: str
