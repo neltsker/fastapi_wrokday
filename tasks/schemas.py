@@ -24,3 +24,8 @@ class UserRegistrationSchema(BaseModel):
 class OrgRegistrationSchema(BaseModel):
     name: str
     description: str
+
+class DepRegistrationSchema(BaseModel):
+    name: str
+    organization: int
+    admin: int

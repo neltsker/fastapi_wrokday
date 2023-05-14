@@ -28,7 +28,7 @@ async def organizations(current_user: Annotated[User, Depends(get_current_active
 
 @task_router.get("/dep/list")
 async def organizations(current_user: Annotated[User, Depends(get_current_active_user)], id:int):
-    organs = await Organization.objects.filter(organization.id ==id).all()
+    organs = await Department.objects.filter(organization__id=id).all()
     return {"organs": organs}
 
 @task_router.post("/org")#, response_model=UserResponceSchema)
@@ -53,31 +53,26 @@ async def OrganizationRegistration(current_user: Annotated[User, Depends(get_cur
             #headers={"WWW-Authenticate": "Bearer"},
         )
     return "i don't know"
-    """"
-    if not userDB:
-        hashPassword = get_password_hash(user.password)
-        userSave=User( 
-        username=user.username,
-        email=user.email,
-        full_name=user.full_name,
-        hashed_password=hashPassword,
-        disabled=False)
 
-        await userSave.save()
-        await authenticate_user(userSave.username, user.password)
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(
-            data={"sub": user.username}, expires_delta=access_token_expires)
-        return {"access_token": access_token, "token_type": "bearer"}
+@task_router.post("/dep")#, response_model=UserResponceSchema)
+async def DepartmentRegistration(current_user: Annotated[User, Depends(get_current_active_user)], dep: DepRegistrationSchema):
+    #form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    #user = await authenticate_user(form_data.username, form_data.password)
+    #print(user)
+    #userDB = await User.objects.get_or_none(username=user.username)
+    depDB= await Department.objects.filter(organization__id=dep.organization).get_or_none(name=dep.name)
+    if not depDB:
+        depar=Department(
+            name=dep.name,
+            organization = dep.organization,
+            admin=dep.admin
+            )
+        await depar.save()
+        return depar
     else:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="User already exist",
+            detail="Department already exist",
             #headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
-    """
+    return "i don't know"

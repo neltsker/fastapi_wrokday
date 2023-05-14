@@ -29,7 +29,7 @@ class Department(ormar.Model):
     id: Optional[int] = ormar.Integer(primary_key=True, autoincrement=True)
     name: str = ormar.String(max_length=100)
     admin: List[User] = ormar.ForeignKey(User, related_name='admin')
-    organization: Organization = ormar.ForeignKey(Organization, related_name="organization")
+    organization: Organization = ormar.ForeignKey(Organization)
     workers: Optional[List[User]] =ormar.ForeignKey(User, related_name='worker')
 
 
