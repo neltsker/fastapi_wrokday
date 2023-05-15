@@ -44,7 +44,8 @@ class Task(ormar.Model):
     description: Optional[str] = ormar.String(max_length=100)
     startDate: datetime = ormar.DateTime(default=datetime.now())
     endDate: Optional[datetime] = ormar.DateTime(nullable=True)
-    creator: User = ormar.ForeignKey(User)
+    creator: User = ormar.ForeignKey(User, related_name="creator")
+    worker: User = ormar.ForeignKey(User)
     dep: Department = ormar.ForeignKey(Department)
     #state:
     
