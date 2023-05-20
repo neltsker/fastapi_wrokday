@@ -29,3 +29,10 @@ class DepRegistrationSchema(BaseModel):
     name: str
     organization: int
     admin: int
+
+class TaskRegistrationScheme(BaseModel):
+    name: str
+    description: Optional[str] 
+    #creator: int
+    worker: int
+    dep: int

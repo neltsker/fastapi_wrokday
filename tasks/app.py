@@ -27,9 +27,14 @@ async def organizations(current_user: Annotated[User, Depends(get_current_active
     return current_user
 
 @task_router.get("/dep/list")
-async def organizations(current_user: Annotated[User, Depends(get_current_active_user)], id:int):
+async def Departments(current_user: Annotated[User, Depends(get_current_active_user)], id:int):
     organs = await Department.objects.filter(organization__id=id).all()
     return {"organs": organs}
+
+@task_router.get("/task/list")
+async def Tasks(current_user: Annotated[User, Depends(get_current_active_user)], id:int):
+    organs = await Task.objects.filter(dep__id=id).all()
+    return {"tasks": organs}
 
 @task_router.post("/org")#, response_model=UserResponceSchema)
 async def OrganizationRegistration(current_user: Annotated[User, Depends(get_current_active_user)], org: OrgRegistrationSchema):
@@ -75,4 +80,35 @@ async def DepartmentRegistration(current_user: Annotated[User, Depends(get_curre
             detail="Department already exist",
             #headers={"WWW-Authenticate": "Bearer"},
         )
+    return "i don't know"
+
+@task_router.post("/task")#, response_model=UserResponceSchema)
+async def TaskRegistration(current_user: Annotated[User, Depends(get_current_active_user)], task: TaskRegistrationScheme):
+    #form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    #user = await authenticate_user(form_data.username, form_data.password)
+    #print(user)
+    #userDB = await User.objects.get_or_none(username=user.username)
+    #taskDB= await Department.objects.filter(organization__id=task.organization).get_or_none(name=dep.name)
+    #if not depDB:
+    tasks=Task(
+            name=task.name,
+            description=task.description,
+            creator=current_user.id,
+            worker=task.worker,
+            dep = task.dep,
+            startDate = datetime.now()
+
+#            des = dep.organization,
+ #           admin=dep.admin
+            )
+    await tasks.save()
+    return tasks
+    """
+    #else:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Department already exist",
+            #headers={"WWW-Authenticate": "Bearer"},
+        )
+        """
     return "i don't know"
