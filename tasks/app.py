@@ -32,9 +32,15 @@ async def Departments(current_user: Annotated[User, Depends(get_current_active_u
     return {"organs": organs}
 
 @task_router.get("/list")
-async def Tasks(current_user: Annotated[User, Depends(get_current_active_user)], id:int):
-    organs = await Task.objects.filter(dep__id=id).all()
+async def Tasks(current_user: Annotated[User, Depends(get_current_active_user)], id:int, active: Optional[bool]=None):
+    if active:
+        organs = await Task.objects.filter(dep__id=id).filter(end=False).all()
+    elif active==None:
+        organs = await Task.objects.filter(dep__id=id).all()
+    else:
+        organs = await Task.objects.filter(dep__id=id).filter(end=True).all()
     return {"tasks": organs}
+
 
 @task_router.get("/task/")
 async def TaskInfo(current_user: Annotated[User, Depends(get_current_active_user)], dep_id: int, id: Optional[int]=None, name: Optional[str]=None):

@@ -80,7 +80,7 @@ class WorkFrame(Frame):
         #print(data)
         headers = {'accept': 'application/json', 'Authorization': 'Bearer '+token}
         #headers = {'accept': 'application/json', 'Authorization': 'Bearer': token}
-        req = requests.get(url="http://127.0.0.1:8000/task/list?id="+self.dep.get(), headers=headers)
+        req = requests.get(url="http://127.0.0.1:8000/task/list?id="+self.dep.get()+'&active=True', headers=headers)
         print(req.status_code, req.json())
         self.tasks = req.json()['tasks']
         #print(self.tasks)
