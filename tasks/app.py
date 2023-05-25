@@ -31,10 +31,29 @@ async def Departments(current_user: Annotated[User, Depends(get_current_active_u
     organs = await Department.objects.filter(organization__id=id).all()
     return {"organs": organs}
 
-@task_router.get("/task/list")
+@task_router.get("/list")
 async def Tasks(current_user: Annotated[User, Depends(get_current_active_user)], id:int):
     organs = await Task.objects.filter(dep__id=id).all()
     return {"tasks": organs}
+
+@task_router.get("/task/")
+async def TaskInfo(current_user: Annotated[User, Depends(get_current_active_user)], dep_id: int, id: Optional[int]=None, name: Optional[str]=None):
+    if id != None:
+        organs = await Task.objects.filter(dep__id=dep_id).get_or_none(id=id)
+    else:
+        organs = await Task.objects.filter(dep__id=dep_id).get_or_none(name=name)
+    return {"task": organs}
+
+@task_router.get("/task/end")
+async def TaskEnd(current_user: Annotated[User, Depends(get_current_active_user)], dep_id: int, id: Optional[int]=None, name: Optional[str]=None):
+    if id != None:
+        organs = await Task.objects.filter(dep__id=dep_id).get_or_none(id=id)
+    else:
+        organs = await Task.objects.filter(dep__id=dep_id).get_or_none(name=name)
+    organs.end=True
+    organs.endDate=datetime.now()
+    await organs.update()
+    return {"task": organs}
 
 @task_router.post("/org")#, response_model=UserResponceSchema)
 async def OrganizationRegistration(current_user: Annotated[User, Depends(get_current_active_user)], org: OrgRegistrationSchema):

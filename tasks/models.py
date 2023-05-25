@@ -41,13 +41,13 @@ class Task(ormar.Model):
         database = database
     id: Optional[int] = ormar.Integer(primary_key=True, autoincrement=True)
     name: str = ormar.String(max_length=100)
-    description: Optional[str] = ormar.String(max_length=100)
+    description: Optional[str] = ormar.String(max_length=10000)
     startDate: datetime = ormar.DateTime(default=datetime.now())
-    endDate: Optional[datetime] = ormar.DateTime(nullable=True)
+    endDate: Optional[datetime] = ormar.DateTime(nullable=True, default=None)
     creator: User = ormar.ForeignKey(User, related_name="creator")
     worker: User = ormar.ForeignKey(User)
     dep: Department = ormar.ForeignKey(Department)
-    #state:
+    end: bool = ormar.Boolean(default=False)
     
     #full_name: Optional[str] = ormar.String(max_length=100)
     #disabled: Optional[bool] = ormar.Boolean()
