@@ -9,6 +9,9 @@ from .models import  *
 from .schemas import *
 from db import database, metadata, engine
 from auth.app import get_current_active_user
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 
 task_router = APIRouter(prefix="/task",
@@ -18,6 +21,15 @@ task_router = APIRouter(prefix="/task",
 @task_router.get("/")
 async def hi():
     return "hi"
+
+
+
+templates = Jinja2Templates(directory="templates")
+
+@task_router.get("/items/{id}", response_class=HTMLResponse)
+async def read_item(request: Request, id: str):
+    return templates.TemplateResponse("item.html", {"request": request, "id": id})
+
 
 
 @task_router.get("/org/list")
@@ -31,10 +43,16 @@ async def Departments(current_user: Annotated[User, Depends(get_current_active_u
     organs = await Department.objects.filter(organization__id=id).all()
     return {"organs": organs}
 
-@task_router.get("/task/list")
-async def Tasks(current_user: Annotated[User, Depends(get_current_active_user)], id:int):
+@task_router.get("/list")
+async def Tasks(current_user: Annotated[User, Depends(get_current_active_user)], id:int, request: Request):
     organs = await Task.objects.filter(dep__id=id).all()
+    #return templates.TemplateResponse("item.html", {"request": request, "tasks": organs})
     return {"tasks": organs}
+
+@task_router.get("/task/{id}")
+async def Tasks(current_user: Annotated[User, Depends(get_current_active_user)], id:int):
+    organs = await Task.objects.get_or_none(id=id)
+    return {"task": organs}
 
 @task_router.post("/org")#, response_model=UserResponceSchema)
 async def OrganizationRegistration(current_user: Annotated[User, Depends(get_current_active_user)], org: OrgRegistrationSchema):
@@ -112,3 +130,5 @@ async def TaskRegistration(current_user: Annotated[User, Depends(get_current_act
         )
         """
     return "i don't know"
+
+

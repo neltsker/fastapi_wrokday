@@ -12,6 +12,8 @@ from db import database, metadata, engine
 
 from auth.app import user_router, oauth2_scheme
 from tasks.app import task_router
+from front.app import front_router
+from fastapi.staticfiles import StaticFiles
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -21,6 +23,8 @@ from tasks.app import task_router
 
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 metadata.create_all(engine)
@@ -66,5 +70,6 @@ async def shutdown() -> None:
 
 app.include_router(user_router)
 app.include_router(task_router)
+app.include_router(front_router)
 
 
