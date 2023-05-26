@@ -2,28 +2,16 @@ from tkinter import *
 from tkinter import ttk
 
 import requests
+
 """
-from tkinter import ttk
- 
-root = Tk()
-root.title("METANIT.COM")
-root.geometry("250x200") 
- 
-# создаем набор вкладок
-notebook = ttk.Notebook()
-notebook.pack(expand=True, fill=BOTH)
- 
-# создаем пару фреймвов
-frame1 = ttk.Frame(notebook)
-frame2 = ttk.Frame(notebook)
- 
-frame1.pack(fill=BOTH, expand=True)
-frame2.pack(fill=BOTH, expand=True)
- 
-# добавляем фреймы в качестве вкладок
-notebook.add(frame1, text="Python")
-notebook.add(frame2, text="Java")
- """
+FastApiWorkDay Client app.
+windows tkinter
+Created by:
+Kurbanov Roman PE-01b
+Ivanov Oleg PE-01b
+Evdokimov Sergey PE-01b
+
+"""
 
 #class MainWindow(Tk):
     
